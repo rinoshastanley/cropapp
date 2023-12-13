@@ -28,10 +28,65 @@
   color: #61dafb;
 }
 
+.gradient-custom {
+  /* fallback for old browsers */
+  background: #6a11cb;
+
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: -webkit-linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1));
+
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: linear-gradient(to right, rgba(106, 17, 203, 1), rgba(37, 117, 252, 1))
+}
+
+.image {
+  height: 15rem;
+}
+
+.crop-body {
+  display: flex;
+  justify-content: center;
+}
+
+.card-title {
+  font-weight: bolder;
+}
+
+.loginButton {
+  background-color: white;
+  padding: 0 3rem;
+}
+
+.crop {
+  margin-bottom: 1rem;
+}
+
+.headers {
+  display: flex;
+  justify-content: space-between;
+  height: 10rem;
+  align-items: center;
+}
+
+.pagination {
+  display: flex;
+}
+
+.pagination .number {
+  border-radius: 100%;
+}
+
+.active {
+  background-color: white;
+  color: black;
+
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
