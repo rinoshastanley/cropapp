@@ -6,7 +6,12 @@ function DashBoard(props) {
     const [filterText, setFilterText] = useState('');
     const [filteredData, setFilteredData] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const cropsPerPage = 10;
+    const [selectedImage, setSelectedImage] = useState('');
+    const cropsPerPage = 50;
+
+    const handleCropClick = (imageUrl) => {
+        setSelectedImage(imageUrl.image)
+    };
 
     useEffect(() => {
         fetch("https://api-cache-test.leanagri.com/pop/pop_list/en/64/pop_list.json")
@@ -44,39 +49,67 @@ function DashBoard(props) {
     const paginate = pageNumber => setCurrentPage(pageNumber);
 
     return (
-        <div className="container mx-auto mt-4">
-            <div className='headers'>
-                <input
-                    type="text"
-                    placeholder="Search by crop name..."
-                    value={filterText}
-                    onChange={handleFilterChange}
-                />
-                <button onClick={() => { props.handleLogout(true) }} className='loginButton'>Logout</button>
+        <>
+            <div className="container mx-auto mt-4">
+                <div className='headers'>
+                    <input
+                        type="text"
+                        placeholder="Search by crop name..."
+                        value={filterText}
+                        onChange={handleFilterChange}
+                    />
+                    <button onClick={() => { props.handleLogout(true) }} className='loginButton'>Logout</button>
+                </div>
+
+                <div className="row">
+                    {currentCrops.map((item, index) => (
+                        <div onClick={() => handleCropClick(item.thumbnails[0])} data-toggle="modal" data-target="#exampleModalCenter">
+                            <CropCard
+                                key={index}
+                                imageArray={item.thumbnails}
+                                cropName={item.crop_name}
+
+                            />
+
+                        </div>
+
+                    ))}
+                </div>
+                {/* Pagination */}
+                <div>
+                    {filteredData.length > cropsPerPage && (
+                        <ul className="pagination">
+                            {Array.from({ length: Math.ceil(filteredData.length / cropsPerPage) }).map((_, index) => (
+                                <li key={index} className={currentPage === index + 1 ? 'active number' : 'number'}>
+                                    <button className='number' onClick={() => paginate(index + 1)}>{index + 1}</button>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
+
             </div>
 
-            <div className="row">
-                {currentCrops.map((item, index) => (
-                    <CropCard
-                        key={index}
-                        imageArray={item.thumbnails}
-                        cropName={item.crop_name}
-                    />
-                ))}
+            <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalCenterTitle">Crop Image</h5>
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div className="modal-body">
+                            <img src={selectedImage} alt="Selected Crop" />
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            {/* Pagination */}
-            <div>
-                {filteredData.length > cropsPerPage && (
-                    <ul className="pagination">
-                        {Array.from({ length: Math.ceil(filteredData.length / cropsPerPage) }).map((_, index) => (
-                            <li key={index} className={currentPage === index + 1 ? 'active number' : 'number'}>
-                                <button className='number' onClick={() => paginate(index + 1)}>{index + 1}</button>
-                            </li>
-                        ))}
-                    </ul>
-                )}
-            </div>
-        </div>
+        </>
+
     );
 }
 
